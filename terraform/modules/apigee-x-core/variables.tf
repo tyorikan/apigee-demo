@@ -32,7 +32,7 @@ variable "network" {
 variable "billing_type" {
   description = "Billing type of the Apigee organization."
   type        = string
-  default     = "payg"
+  default     = "PAYG"
 }
 
 variable "apigee_envgroups" {
