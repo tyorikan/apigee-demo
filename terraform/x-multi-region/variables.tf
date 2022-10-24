@@ -19,6 +19,10 @@ variable "project_id" {
   type        = string
 }
 
+variable "project_number" {
+  type = string
+}
+
 variable "svpc_host_project_id" {
   description = "Shared VPC Host Project id (if left empty will be set to project_id with prefix 'host-')."
   type        = string
@@ -107,4 +111,44 @@ variable "project_create" {
   description = "Create project. When set to false, uses a data source to reference existing project."
   type        = bool
   default     = false
+}
+
+variable "gke_region_1" {
+  type = string
+}
+
+variable "gke_region_1_cidr_range" {
+  type = string
+}
+
+variable "gke_region_1_proxy_cidr_range" {
+  type = string
+}
+
+variable "gke_region_1_pod_cidr_range" {
+  type = string
+}
+
+variable "gke_region_1_service_cidr_range" {
+  type = string
+}
+
+variable "gke_region_2" {
+  type = string
+}
+
+variable "gke_region_2_cidr_range" {
+  type = string
+}
+
+variable "gke_region_2_proxy_cidr_range" {
+  type = string
+}
+
+variable "gke_region_2_pod_cidr_range" {
+  type = string
+}
+
+variable "gke_region_2_service_cidr_range" {
+  type = string
 }

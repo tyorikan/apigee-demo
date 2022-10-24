@@ -15,13 +15,25 @@
  */
 
 locals {
-  subnet_region_name = { for subnet in var.exposure_subnets :
+  subnet_region_name = {
+    for subnet in var.exposure_subnets :
     subnet.region => "${subnet.region}/${subnet.name}"
   }
-  instance_region_name = { for subnet in var.exposure_subnets :
+  instance_region_name = {
+    for subnet in var.exposure_subnets :
     subnet.region => subnet.instance
   }
   svpc_host_project_id = var.svpc_host_project_id != "" ? var.svpc_host_project_id : join("-", ["host", var.project_id])
+}
+
+provider "google" {
+  project = var.project_id
+  region  = var.ax_region
+}
+
+provider "google-beta" {
+  project = var.project_id
+  region  = var.ax_region
 }
 
 module "host-project" {
@@ -36,7 +48,8 @@ module "host-project" {
     service_projects = [] # defined later
   }
   services = [
-    "servicenetworking.googleapis.com"
+    "servicenetworking.googleapis.com",
+    "container.googleapis.com"
   ]
 }
 
@@ -56,7 +69,10 @@ module "service-project" {
     "apigee.googleapis.com",
     "cloudkms.googleapis.com",
     "compute.googleapis.com",
-    "servicenetworking.googleapis.com"
+    "servicenetworking.googleapis.com",
+    "container.googleapis.com",
+    "mesh.googleapis.com",
+    "gkehub.googleapis.com"
   ]
 }
 
