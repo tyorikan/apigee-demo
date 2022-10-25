@@ -54,6 +54,21 @@ resource "google_compute_subnetwork" "proxy-only-subnet-2" {
   role          = "ACTIVE"
 }
 
+resource "google_compute_firewall" "fw-allow-ssh" {
+  project   = module.host-project.project_id
+  name      = "fw-allow-ssh"
+  network   = var.network
+  direction = "INGRESS"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]
+  target_tags   = ["allow-ssh"]
+}
+
 resource "google_compute_firewall" "fw-allow-health-check" {
   project   = module.host-project.project_id
   name      = "fw-allow-health-check"
@@ -77,32 +92,37 @@ resource "google_compute_firewall" "fw-allow-proxy-only-subnet" {
 
   allow {
     protocol = "tcp"
-    ports    = ["80"]
+    #    ports    = ["80"]
   }
 
-  source_ranges = [var.gke_region_1_proxy_cidr_range, var.gke_region_2_proxy_cidr_range]
-  target_tags   = ["allow-proxy-only-subnet"]
-}
-
-resource "google_compute_firewall" "asm-multicluster-pods" {
-  project   = module.host-project.project_id
-  name      = "asm-multicluster-pods"
-  network   = var.network
-  direction = "INGRESS"
-  priority  = 900
-
-  allow { protocol = "tcp" }
-  allow { protocol = "udp" }
-  allow { protocol = "icmp" }
-  allow { protocol = "esp" }
-  allow { protocol = "ah" }
-  allow { protocol = "sctp" }
-
-  source_ranges = [var.gke_region_1_pod_cidr_range, var.gke_region_2_pod_cidr_range]
-
-  // TODO how should I set target tags dynamically?
-  target_tags = [
-    "gke-apigee-backend-asia-northeast1-c9791e7b-node",
-    "gke-apigee-backend-asia-northeast2-7ecba11b-node"
+  source_ranges = [
+    var.gke_region_1_proxy_cidr_range,
+    var.gke_region_2_proxy_cidr_range,
+    var.gke_region_1_cidr_range, // for test
+    var.gke_region_2_cidr_range // for test
   ]
+  #  target_tags   = ["allow-proxy-only-subnet"]
 }
+
+#resource "google_compute_firewall" "asm-multicluster-pods" {
+#  project   = module.host-project.project_id
+#  name      = "asm-multicluster-pods"
+#  network   = var.network
+#  direction = "INGRESS"
+#  priority  = 900
+#
+#  allow { protocol = "tcp" }
+#  allow { protocol = "udp" }
+#  allow { protocol = "icmp" }
+#  allow { protocol = "esp" }
+#  allow { protocol = "ah" }
+#  allow { protocol = "sctp" }
+#
+#  source_ranges = [var.gke_region_1_pod_cidr_range, var.gke_region_2_pod_cidr_range]
+#
+#  // TODO how should I set target tags dynamically?
+#  target_tags = [
+#    "gke-apigee-backend-asia-northeast1-c9791e7b-node",
+#    "gke-apigee-backend-asia-northeast2-7ecba11b-node"
+#  ]
+#}

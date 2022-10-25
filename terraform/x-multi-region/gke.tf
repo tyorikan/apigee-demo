@@ -18,6 +18,8 @@ resource "google_project_iam_binding" "compute-network-user-binding" {
 }
 
 resource "google_container_cluster" "gke-autopilot-1" {
+  #  provider = google-beta
+
   depends_on = [
     google_compute_subnetwork.gke-backend-network-1,
     google_project_iam_binding.container-host-service-agent-binding,
@@ -50,12 +52,24 @@ resource "google_container_cluster" "gke-autopilot-1" {
     }
   }
 
+  #  node_pool_auto_config {
+  #    network_tags {
+  #      tags = concat(
+  #        tolist(google_compute_firewall.fw-allow-ssh.target_tags),
+  #        tolist(google_compute_firewall.fw-allow-health-check.target_tags),
+  #        tolist(google_compute_firewall.fw-allow-proxy-only-subnet.target_tags)
+  #      )
+  #    }
+  #  }
+
   resource_labels = {
     mesh_id = "proj-${var.project_number}"
   }
 }
 
 resource "google_container_cluster" "gke-autopilot-2" {
+  #  provider = google-beta
+
   depends_on = [
     google_compute_subnetwork.gke-backend-network-2,
     google_project_iam_binding.container-host-service-agent-binding,
@@ -87,6 +101,16 @@ resource "google_container_cluster" "gke-autopilot-2" {
       start_time = "19:00" // GMT
     }
   }
+
+  #  node_pool_auto_config {
+  #    network_tags {
+  #      tags = concat(
+  #        tolist(google_compute_firewall.fw-allow-ssh.target_tags),
+  #        tolist(google_compute_firewall.fw-allow-health-check.target_tags),
+  #        tolist(google_compute_firewall.fw-allow-proxy-only-subnet.target_tags)
+  #      )
+  #    }
+  #  }
 
   resource_labels = {
     mesh_id = "proj-${var.project_number}"
