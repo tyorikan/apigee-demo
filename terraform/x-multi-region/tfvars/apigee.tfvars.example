@@ -1,0 +1,56 @@
+project_id           = "service-project-id"
+project_number       = "123456789012"
+svpc_host_project_id = "host-project-id"
+ax_region            = "asia-northeast1"
+apigee_environments  = ["dev1", "dev2"]
+apigee_instances     = {
+  asia-ne1-instance = {
+    region       = "asia-northeast1"
+    ip_range     = "10.0.16.0/22"
+    environments = ["dev1", "dev2"]
+  }
+  asia-ne2-instance = {
+    region       = "asia-northeast2"
+    ip_range     = "10.0.8.0/22"
+    environments = ["dev1", "dev2"]
+  }
+}
+apigee_envgroups = {
+  dev = {
+    environments = ["dev1", "dev2"]
+    hostnames    = ["api-dev.example.com"]
+  }
+}
+network          = "apigee-network"
+exposure_subnets = [
+  {
+    name               = "apigee-exposure-1"
+    ip_cidr_range      = "10.100.0.0/24"
+    region             = "asia-northeast1"
+    instance           = "asia-ne1-instance"
+    secondary_ip_range = null
+  },
+  {
+    name               = "apigee-exposure-2"
+    ip_cidr_range      = "10.200.0.0/24"
+    region             = "asia-northeast2"
+    instance           = "asia-ne2-instance"
+    secondary_ip_range = null
+  }
+]
+peering_range  = "10.0.0.0/16"
+support_range1 = "10.1.0.0/28"
+support_range2 = "10.2.0.0/28"
+
+## GKE
+gke_region_1                    = "asia-northeast1"
+gke_region_1_cidr_range         = "10.1.2.0/24"
+gke_region_1_proxy_cidr_range   = "10.129.0.0/23"
+gke_region_1_pod_cidr_range     = "10.10.0.0/16"
+gke_region_1_service_cidr_range = "10.20.0.0/16"
+
+gke_region_2                    = "asia-northeast2"
+gke_region_2_cidr_range         = "10.1.3.0/24"
+gke_region_2_proxy_cidr_range   = "10.129.10.0/23"
+gke_region_2_pod_cidr_range     = "10.30.0.0/16"
+gke_region_2_service_cidr_range = "10.40.0.0/16"
